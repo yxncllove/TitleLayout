@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TitleLayout">
+        <attr name="tTitleLayoutTitle" format="string"/>
+        <attr name="tTitleLayoutTextSize" format="dimension"/>
+        <attr name="tTitleLayoutTextColor" format="color"/>
+        <attr name="tTitleLayoutBackIcon" format="reference"/>
+        <attr name="tTitleLayoutTheme" format="reference"/>
+    </declare-styleable>
+</resources>

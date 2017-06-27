@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">TitleLayout</string>
+    <string name="title_text">自定义Toolbar</string>
+    <string name="add">添加</string>
+    <string name="remove">移除</string>
+</resources>
