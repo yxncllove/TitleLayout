@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.app.R;
 
@@ -20,8 +21,14 @@ import com.example.app.R;
 
 public class TitleLayout extends LinearLayoutCompat
 {
+  private int textColor;
+  private int textSize;
+  private int themeResId;
+  private Drawable backIcon;
+  private String mTitle;
   private Toolbar mToolbar;
-//  private TextView mTextView;
+  private Context mContext;
+  private TextView mTextView;
 
   public TitleLayout(Context context)
   {
@@ -31,24 +38,23 @@ public class TitleLayout extends LinearLayoutCompat
   public TitleLayout(Context context, AttributeSet attrs)
   {
     super(context, attrs);
+    this.mContext = context;
     init(context);
+    initTypedArray(context, attrs);
+    initLayout();
+    initToolbar();
+  }
 
-    int defaultSize = this.sp2px(context, 14.0F);
-    int defaultColor = Color.BLACK;
-
+  private void initTypedArray(Context context, AttributeSet attrs)
+  {
     TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TitleLayout);
-    String title = ta.getString(R.styleable.TitleLayout_tTitleLayoutTitle);
-    int textColor = ta.getColor(R.styleable.TitleLayout_tTitleLayoutTextColor, defaultColor);
-    float textSize = ta.getDimensionPixelSize(R.styleable.TitleLayout_tTitleLayoutTextSize, defaultSize);
-    Drawable backIcon = ta.getDrawable(R.styleable.TitleLayout_tTitleLayoutBackIcon);
-    int themeResId = ta.getResourceId(R.styleable.TitleLayout_tTitleLayoutTheme, 0);
-
-//    mTextView.setText(title);
-//    mTextView.setTextColor(textColor);
-//    mTextView.setTextSize(0, textSize);
-    mToolbar.setNavigationIcon(backIcon);
-    mToolbar.setPopupTheme(themeResId);
-
+    int mDefaultSize = this.sp2px(context, 14.0F);
+    int mDefaultColor = Color.BLACK;
+    mTitle = ta.getString(R.styleable.TitleLayout_tTitleLayoutTitle);
+    textColor = ta.getColor(R.styleable.TitleLayout_tTitleLayoutTextColor, mDefaultColor);
+    textSize = ta.getDimensionPixelSize(R.styleable.TitleLayout_tTitleLayoutTextSize, mDefaultSize);
+    backIcon = ta.getDrawable(R.styleable.TitleLayout_tTitleLayoutBackIcon);
+    themeResId = ta.getResourceId(R.styleable.TitleLayout_tTitleLayoutTheme, 0);
     ta.recycle();
   }
 
@@ -62,7 +68,35 @@ public class TitleLayout extends LinearLayoutCompat
   {
     View view = LayoutInflater.from(context).inflate(R.layout.title_layout, this);
     mToolbar = (Toolbar) view.findViewById(R.id.title_toolbar);
-//    mTextView = (TextView) view.findViewById(R.id.title_text_view);
+  }
+
+  private void initLayout()
+  {
+    if (this.mTitle != null)
+    {
+      this.initTitle();
+    }
+  }
+
+  private void initTitle()
+  {
+    mTextView = new TextView(mContext);
+    mTextView.setText(mTitle);
+    mTextView.setTextColor(textColor);
+    mTextView.setTextSize(0,textSize);
+    mTextView.setGravity(Gravity.CENTER);
+
+    Toolbar.LayoutParams params = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT,
+        Toolbar.LayoutParams.MATCH_PARENT);
+    params.gravity = Gravity.CENTER;
+    mTextView.setLayoutParams(params);
+    mToolbar.addView(mTextView, 0);
+  }
+
+  private void initToolbar()
+  {
+    mToolbar.setNavigationIcon(backIcon);
+    mToolbar.setPopupTheme(themeResId);
   }
 
 
@@ -86,16 +120,38 @@ public class TitleLayout extends LinearLayoutCompat
     mToolbar.setOverflowIcon(getResources().getDrawable(resId));
   }
 
-  public void addView(View child)
+  public TitleLayout setTtileText(String title)
   {
-    View centerView = mToolbar.getChildAt(0);
-
-    Toolbar.LayoutParams params = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT,
-        Toolbar.LayoutParams.MATCH_PARENT);
-    params.gravity = Gravity.CENTER;
-    child.setLayoutParams(params);
-    mToolbar.addView(child, 0);
+    this.mTitle = title;
+    if (mTextView == null)
+      initTitle();
+    else
+      mTextView.setText(title);
+    return this;
   }
+
+
+  public TitleLayout setTitleTextColor(int textColorResId)
+  {
+    this.textColor = textColorResId;
+    if (mTextView == null)
+      initTitle();
+    else
+      mTextView.setTextColor(textColorResId);
+
+    return this;
+  }
+
+  public TitleLayout setTitleTextSize(float textSize)
+  {
+    this.textSize = this.sp2px(mContext, textSize);
+    if (mTextView == null)
+      initTitle();
+    else
+      mTextView.setTextSize(0,textSize);
+    return this;
+  }
+
 
   private int sp2px(Context context, float spValue)
   {

@@ -1,5 +1,6 @@
 package com.example.app;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     mLayout.setOnItemMenuListener(this);
     mLayout.setOverflowIcon(R.drawable.ic_zoom_out_map_black_24dp);
     mLayout.setNavigationOnClickListener(this);
-
+    mLayout.setTitleTextColor(Color.BLACK);
   }
 
   @Override
